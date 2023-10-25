@@ -1,19 +1,24 @@
-// Atenção: Conferir o identificador do seu campo CPF na árvore de expressões, dentro de _object.
-if (_object.cPF && _object.cPF !== _oldObject.cPF) {               
+const MessagesErrorController = {
+    cpfAbove11Algarisms: 'O cpf digitado possui mais do que 11 algarismos.',
+    cpfNotExists: 'Insira um CPF.',
+    cpfNotValidate: 'O CPF ' + _object.cPF + ' cadastrado não é válido.'
+}
+
+if(_object.cPF && _object.cPF !== _oldObject.cPF){
     _object.cPF = formatCPF(_object.cPF);
 }
 
-/***** Funções principais ******/
-
-function formatCPF(cpf) {
-    if (!cpf) return '';
-
-    cpf = cpf.replace(/\D/g, '');     // Remove todo caracter não numérico
-
-    if (cpf.length > 11) {
-        throw "CPF digitado possui mais de 11 algarismos.";
+function formatCPF(cpf){
+    if(!cpf){
+        return MessagesErrorController.cpfNotExists;
     }
-
+    
+    cpf = cpf.replace(/\D/g, '');
+    
+    if(cpf.length > 11){
+        throw MessagesErrorController.cpfAbove11Algarisms;
+    }
+    
     function replacer(match, p1, p2, p3, p4) {
         let result = '';
         result += p1 !== undefined ? p1 : '';
@@ -24,11 +29,12 @@ function formatCPF(cpf) {
     }
 
     return cpf.replace(/(\d{3})(\d{1,3})?(\d{1,3})?(\d{1,2})?/, replacer);
+    
 }
 
 // Atenção: Conferir o identificador do seu campo CPF na árvore de expressões, dentro de _object.
 if (_object.cPF && !validateCPF(_object.cPF)) {
-    throw "O CPF " + _object.cPF + " cadastrado não é válido";
+    throw MessagesErrorController.cpfNotValidate;
 }
 
 /***** Funções principais ******/
